@@ -27,3 +27,10 @@ spec:
                 key: AZP_TOKEN
           - name: AZP_POOL
             value: "Default"
+        resources:
+          limits:
+            cpu: "10"
+            memory: "12Gi"
+          requests:
+            cpu: "0.5"
+            memory: "2Gi"
