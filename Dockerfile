@@ -1,7 +1,5 @@
 FROM debian:bookworm-slim
 
-VOLUME /var/run/docker.sock
-
 # Update and install dependencies
 RUN apt update -y && apt upgrade -y && \
     apt install -y curl git jq libicu72 gnupg lsb-release
@@ -27,5 +25,7 @@ RUN usermod -aG docker agent && \
     newgrp docker
 
 USER agent
+
+VOLUME /var/run/docker.sock
 
 ENTRYPOINT ./start.sh
