@@ -1,5 +1,7 @@
 FROM amd64/docker:24-dind-rootless
 
+USER root
+
 # Update and install dependencies
 RUN apk update
 RUN apk upgrade
@@ -12,6 +14,7 @@ RUN chmod +x ./start.sh
 
 RUN adduser -D agent
 RUN chown agent ./
+
 USER agent
 # Another option is to run the agent as root.
 # ENV AGENT_ALLOW_RUNASROOT="true"
