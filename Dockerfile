@@ -10,6 +10,14 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /
     apt-get update && \
     apt-get install -y docker-ce docker-ce-cli containerd.io 
 
+# Install BuildKit
+RUN curl -fsSL https://github.com/moby/buildkit/releases/download/v0.14.1/buildkit-v0.14.1.linux-amd64.tar.gz | tar -xz -C /usr/local
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Set up BuildKit in rootless mode
+RUN curl -fsSL https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service -o /etc/systemd/system/buildkit.service && \
+    curl -fsSL https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket -o /etc/systemd/system/buildkit.socket
+
 ENV TARGETARCH="linux-x64"
 
 WORKDIR /azp/
@@ -25,6 +33,9 @@ RUN usermod -aG docker agent && \
     newgrp docker
 
 USER agent
+
+RUN mkdir -p ~/.config/buildkit
+COPY --chown=agent:agent buildkitd.toml ~/.config/buildkit/buildkitd.toml
 
 VOLUME /var/run/docker.sock
 

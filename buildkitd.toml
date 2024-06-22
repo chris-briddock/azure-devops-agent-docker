@@ -1,0 +1,3 @@
+[worker.oci]
+  rootless = true
+  noprocesssandbox = true

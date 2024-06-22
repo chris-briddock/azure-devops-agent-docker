@@ -18,15 +18,15 @@ spec:
       - name: azdevops-agent
         image: immerslve/azp-agent:latest
         env:
-          - name: AZP_URL
-            value: "https://dev.azure.com/chris1997/"
-          - name: AZP_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: azdevops 
-                key: AZP_TOKEN
-          - name: AZP_POOL
-            value: "Default"
+        - name: AZP_URL
+          value: "https://dev.azure.com/chris1997/"
+        - name: AZP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: azdevops
+              key: AZP_TOKEN
+        - name: AZP_POOL
+          value: "Default"
         resources:
           limits:
             cpu: "4"
@@ -34,13 +34,6 @@ spec:
           requests:
             cpu: "1"
             memory: "1Gi"
-        volumeMounts:
-          - name: docker-socket
-            mountPath: /var/run/docker.sock
         securityContext:
-          privileged: true
-      volumes:
-      - name: docker-socket
-        hostPath:
-          path: /var/run/docker.sock
-          type: Socket
+          runAsUser: 1000
+          runAsGroup: 1000
