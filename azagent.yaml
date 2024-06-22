@@ -34,6 +34,10 @@ spec:
           requests:
             cpu: "1"
             memory: "1Gi"
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
+        volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
