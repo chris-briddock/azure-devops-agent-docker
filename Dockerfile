@@ -5,20 +5,16 @@ RUN apt update -y && apt upgrade -y && \
     apt install -y curl git jq libicu72 gnupg lsb-release
 
 # Install docker
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce docker-ce-cli containerd.io 
-
-# Install BuildKit
-RUN curl -fsSL https://github.com/moby/buildkit/releases/download/v0.14.1/buildkit-v0.14.1.linux-amd64.tar.gz | tar -xz -C /usr/local
-ENV PATH="/usr/local/bin:${PATH}"
-
-# Set up BuildKit in rootless mode
-RUN curl -fsSL https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.service -o /etc/systemd/system/buildkit.service && \
-    curl -fsSL https://raw.githubusercontent.com/moby/buildkit/master/examples/systemd/system/buildkit.socket -o /etc/systemd/system/buildkit.socket
+RUN curl -fsSL https://get.docker.com | sh
 
 ENV TARGETARCH="linux-x64"
+
+# Install Docker Compose
+RUN curl -L "https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose
+
+COPY ./dind-wrapper.sh /usr/local/bin/dind-wrapper.sh
+RUN chmod +x /usr/local/bin/dind-wrapper.sh
 
 WORKDIR /azp/
 
@@ -34,9 +30,7 @@ RUN usermod -aG docker agent && \
 
 USER agent
 
-RUN mkdir -p ~/.config/buildkit
-COPY --chown=agent:agent buildkitd.toml ~/.config/buildkit/buildkitd.toml
-
 VOLUME /var/run/docker.sock
 
-ENTRYPOINT ./start.sh
+ENTRYPOINT ["/usr/local/bin/dind-wrapper.sh"]
+CMD ["./start.sh"]
