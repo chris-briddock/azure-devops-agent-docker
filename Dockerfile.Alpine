@@ -2,6 +2,8 @@ FROM amd64/docker:24-dind-rootless
 
 USER root
 
+ENV TARGETARCH="linux-musl-x64"
+
 # Update and install dependencies
 RUN apk update
 RUN apk upgrade
