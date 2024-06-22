@@ -20,7 +20,15 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build Docker image
-      run: docker build -t immerslve/azp-agent:latest .
-    - name: Push Docker image
+    - name: Build Docker image - Alpine
+      run: docker build -f Dockerfile.Alpine -t immerslve/azp-agent:latest .
+    - name: Build Docker image - Alpine
+      run: docker build -f Dockerfile.Alpine -t immerslve/azp-agent:alpine .
+     - name: Build Docker image - Debian Bookworm Slim
+      run: docker build -f Dockerfile.Debain -t immerslve/azp-agent:debian .
+    - name: Push Docker image - Latest
       run: docker push immerslve/azp-agent:latest
+    - name: Push Docker image - Alpine
+      run: docker push immerslve/azp-agent:alpine
+    - name: Push Docker image - Debian
+      run: docker push immerslve/azp-agent:debian
