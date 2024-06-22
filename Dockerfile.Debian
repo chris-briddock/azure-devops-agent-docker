@@ -15,9 +15,6 @@ RUN chmod +x ./start.sh
 RUN useradd -m -d /home/agent agent
 RUN chown -R agent:agent /azp /home/agent
 
-RUN usermod -aG docker agent && \
-    newgrp docker
-
 USER agent
 
 ENTRYPOINT ./start.sh
