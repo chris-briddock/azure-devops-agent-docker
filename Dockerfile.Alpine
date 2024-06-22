@@ -2,6 +2,8 @@ FROM docker:dind
 
 USER root
 
+VOLUME /var/run/docker.sock
+
 ENV TARGETARCH="linux-musl-x64"
 
 # Update and install dependencies
