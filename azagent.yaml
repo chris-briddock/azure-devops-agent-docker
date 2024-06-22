@@ -29,8 +29,18 @@ spec:
             value: "Default"
         resources:
           limits:
-            cpu: "10"
-            memory: "12Gi"
+            cpu: "4"
+            memory: "1Gi"
           requests:
-            cpu: "0.5"
-            memory: "2Gi"
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+          - name: docker-socket
+            mountPath: /var/run/docker.sock
+        securityContext:
+          privileged: true
+      volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
